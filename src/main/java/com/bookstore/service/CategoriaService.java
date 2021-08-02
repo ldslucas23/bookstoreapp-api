@@ -1,5 +1,6 @@
 package com.bookstore.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,5 +21,10 @@ public class CategoriaService {
 		Optional<Categoria> categoria = categoriaRepository.findById(id);
 		//Se não encontrar, vai retornar a função anônima que imlementa a minha execeção personalizada para objetos não encontrados
 		return categoria.orElseThrow(() -> new ObjectNotFoundException("Categoria não encontrada! Id: " + id + " Tipo: " + Categoria.class.getName()));
+	}
+	
+	//Retorna todas as categorias
+	public List<Categoria> findAll(){
+		return categoriaRepository.findAll();
 	}
 }
