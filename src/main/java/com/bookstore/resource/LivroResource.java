@@ -1,5 +1,6 @@
 package com.bookstore.resource;
 
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -8,11 +9,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.bookstore.domain.Livro;
 import com.bookstore.dto.LivroDTO;
@@ -51,5 +54,15 @@ public class LivroResource {
 	public ResponseEntity<Livro> updatePatch(@PathVariable Integer id, @RequestBody Livro livroParaAtualizar){
 		Livro livroAtualizado = livroService.update(id, livroParaAtualizar);
 		return ResponseEntity.ok().body(livroAtualizado);
+	}
+	
+	//Quando recebemos uma requisição POST com /livros e recebemos um id de categoria ele vai vincular o livro
+	//localhost:8080/livros?categoria=1, esse é um exemplo de como fica
+	@PostMapping
+	public ResponseEntity<Livro> create(@RequestParam(value= "categoria", defaultValue = "0" ) Integer idCategoria,@RequestBody Livro livro){
+		Livro novoLivro = livroService.create(idCategoria, livro);
+		URI uri = ServletUriComponentsBuilder.fromCurrentContextPath().path("/livros/{id}").buildAndExpand(novoLivro.getId()).toUri();
+		return ResponseEntity.created(uri).build();
+		
 	}
 }
