@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.bookstore.domain.Categoria;
@@ -47,7 +48,12 @@ public class CategoriaService {
 	public void delete(Integer id) {
 		//Verificamos se o objeto existe, se não existir vai ter que retornar uma exceção
 		findById(id);
-		categoriaRepository.deleteById(id);
+		try {
+			categoriaRepository.deleteById(id);
+		} catch (DataIntegrityViolationException e) {
+			throw new com.bookstore.service.exception.DataIntegrityViolationException("A Categoria não pode ser deletada! Pois, possui livros associados Id: " + id + " Tipo: " + Categoria.class.getName());
+		}
+
 	}
 	
 

@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.bookstore.service.exception.DataIntegrityViolationException;
 import com.bookstore.service.exception.ObjectNotFoundException;
 
 
@@ -21,4 +22,12 @@ public class ResourceExceptionHandler {
 		    //Se não encontrar o objeto no banco de dados, ele retorna o status NOT FOUND para a requisição e a mensagem de erro
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(standardError);
 		}
+		
+		@ExceptionHandler(DataIntegrityViolationException.class)
+		public ResponseEntity<StandardError> dataIntegrityViolationException(DataIntegrityViolationException e, ServletRequest servletRequest){
+			StandardError standardError = new StandardError(System.currentTimeMillis(), HttpStatus.BAD_REQUEST.value(), e.getMessage());
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(standardError);
+		}
+		
+		
 }
