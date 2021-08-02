@@ -1,5 +1,6 @@
 package com.bookstore.resource;
 
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -7,12 +8,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.bookstore.domain.Categoria;
 import com.bookstore.dto.CategoriaDTO;
 import com.bookstore.service.CategoriaService;
+
 
 //Essa é uma classe de controlador Rest que recebe requisições
 @RestController
@@ -40,6 +45,19 @@ public class CategoriaResource {
 		//Para cada objeto da lista de Categorias, instaciamos um objeto do tipo CategoriaDTO
 		List<CategoriaDTO> categoriasDTO = categorias.stream().map(categoria -> new CategoriaDTO(categoria)).collect(Collectors.toList());
 		return ResponseEntity.ok().body(categoriasDTO);
+	}
+	
+	//Quando receber uma requisição do tipo post no /categorias, esse método vai ser chamado
+	@PostMapping
+	public ResponseEntity<Categoria> create(@RequestBody Categoria categoria){
+		//Vamos salvar a categoria que veio no body e já preenchemos ele com o id
+		categoria = categoriaService.create(categoria);
+		//Por questões de boas práticas temos que passar para o usuário um caminho (URI) de acesso ao novo objeto
+		//Passamos o endpoint findById no path
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(categoria.getId()).toUri();
+		return ResponseEntity.created(uri).build();
+		//Alguns preferem retornar todo o objeto, exemplo abaixo 
+		//return ResponseEntity.created(uri).body(categoria);
 	}
 	
 }

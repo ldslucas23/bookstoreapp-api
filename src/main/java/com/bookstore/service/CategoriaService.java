@@ -27,4 +27,10 @@ public class CategoriaService {
 	public List<Categoria> findAll(){
 		return categoriaRepository.findAll();
 	}
+	
+	public Categoria create(Categoria categoria) {
+		// Se o id vier preenchido, vamos passar nulo para o JPA não atualizar e só inserir
+		categoria.setId(null);
+		return categoriaRepository.save(categoria);
+	}
 }
