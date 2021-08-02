@@ -43,6 +43,12 @@ public class CategoriaService {
 		//Esse método já entende que tem um id é uma atualização
 		return categoriaRepository.save(categoria);
 	}
+
+	public void delete(Integer id) {
+		//Verificamos se o objeto existe, se não existir vai ter que retornar uma exceção
+		findById(id);
+		categoriaRepository.deleteById(id);
+	}
 	
 
 }

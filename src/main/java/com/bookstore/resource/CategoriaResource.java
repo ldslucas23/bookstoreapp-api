@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -58,7 +59,7 @@ public class CategoriaResource {
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(categoria.getId()).toUri();
 		return ResponseEntity.created(uri).build();
 		//Alguns preferem retornar todo o objeto, exemplo abaixo 
-		//return ResponseEntity.created(uri).body(categoria);
+		//return ResponseEntity.created(uri).body(categoria);s
 	}
 
 	//Recebemos uma CategoriaDTO, pois estamos atualizando apenas as categorias e não os livros
@@ -66,6 +67,14 @@ public class CategoriaResource {
 	public ResponseEntity<CategoriaDTO> update(@PathVariable Integer id, @RequestBody CategoriaDTO categoria){
 		Categoria novaCategoria = categoriaService.update(id, categoria);
 		return ResponseEntity.ok().body(new CategoriaDTO(novaCategoria));
+	}
+	
+	//Deleta a categoria pelo id passado na requisição do tipo Delete
+	@DeleteMapping(value = "/{id}")
+	public ResponseEntity<Void> delete(@PathVariable Integer id){
+		categoriaService.delete(id);
+		//Não retorna nada
+		return ResponseEntity.noContent().build();
 	}
 	
 }
