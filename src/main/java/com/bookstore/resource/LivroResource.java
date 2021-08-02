@@ -6,7 +6,10 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,5 +38,18 @@ public class LivroResource {
 		List<Livro> livros = livroService.findAll(idCategoria);
 		List<LivroDTO> livrosDTO = livros.stream().map(livro -> new LivroDTO(livro)).collect(Collectors.toList());
 		return ResponseEntity.ok().body(livrosDTO);
+	}
+	
+	@PutMapping(value = "/{id}")
+	public ResponseEntity<Livro> update(@PathVariable Integer id, @RequestBody Livro livroParaAtualizar){
+		Livro livroAtualizado = livroService.update(id, livroParaAtualizar);
+		return ResponseEntity.ok().body(livroAtualizado);
+	}
+	
+	//Atualiza parcialmente as iformações
+	@PatchMapping(value = "/{id}")
+	public ResponseEntity<Livro> updatePatch(@PathVariable Integer id, @RequestBody Livro livroParaAtualizar){
+		Livro livroAtualizado = livroService.update(id, livroParaAtualizar);
+		return ResponseEntity.ok().body(livroAtualizado);
 	}
 }
