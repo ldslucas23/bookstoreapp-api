@@ -1,6 +1,10 @@
 package com.bookstore.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.bookstore.domain.Livro;
@@ -17,5 +21,8 @@ import com.bookstore.domain.Livro;
  * dados.
  */
 public interface LivroRepository extends JpaRepository<Livro, Integer> {
+
+	@Query("Select obj from Livro obj where obj.categoria.id = :id_categoria order by titulo ")
+	List<Livro> findAllByCategoria(@Param(value="id_categoria")  Integer idCategoria);
 
 }
