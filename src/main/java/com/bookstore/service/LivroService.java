@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.bookstore.domain.Categoria;
@@ -49,5 +50,10 @@ public class LivroService {
 		Categoria categoria = categoriaService.findById(idCategoria);
 		livro.setCategoria(categoria);
 		return livroRepository.save(livro);
+	}
+
+	public void delete(Integer id) {
+		Livro livro = findById(id);
+		livroRepository.delete(livro);;
 	}
 }
