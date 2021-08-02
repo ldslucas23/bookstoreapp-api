@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bookstore.domain.Categoria;
+import com.bookstore.dto.CategoriaDTO;
 import com.bookstore.repository.CategoriaRepository;
 import com.bookstore.service.exception.ObjectNotFoundException;
 
@@ -33,4 +34,15 @@ public class CategoriaService {
 		categoria.setId(null);
 		return categoriaRepository.save(categoria);
 	}
+
+	public Categoria update(Integer id, CategoriaDTO categoriaDTO) {
+		//Verificamos se o objeto existe, se não existir vai ter que retornar uma exceção
+		Categoria categoria = findById(id);
+		categoria.setNome(categoriaDTO.getNome());
+		categoria.setDescricao(categoriaDTO.getDescricao());
+		//Esse método já entende que tem um id é uma atualização
+		return categoriaRepository.save(categoria);
+	}
+	
+
 }

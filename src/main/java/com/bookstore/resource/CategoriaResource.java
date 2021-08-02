@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -58,6 +59,13 @@ public class CategoriaResource {
 		return ResponseEntity.created(uri).build();
 		//Alguns preferem retornar todo o objeto, exemplo abaixo 
 		//return ResponseEntity.created(uri).body(categoria);
+	}
+
+	//Recebemos uma CategoriaDTO, pois estamos atualizando apenas as categorias e não os livros
+	@PutMapping(value = "/{id}")
+	public ResponseEntity<CategoriaDTO> update(@PathVariable Integer id, @RequestBody CategoriaDTO categoria){
+		Categoria novaCategoria = categoriaService.update(id, categoria);
+		return ResponseEntity.ok().body(new CategoriaDTO(novaCategoria));
 	}
 	
 }
