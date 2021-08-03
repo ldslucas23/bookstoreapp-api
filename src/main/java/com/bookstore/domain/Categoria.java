@@ -10,6 +10,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotEmpty;
+
+import org.hibernate.validator.constraints.Length;
 
 //Essa anotação indica para o JPA que ela pode criar uma tabela na nossa base de dados
 @Entity
@@ -21,7 +24,13 @@ public class Categoria implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
+	//Essa anotação indica que o nome não pode ser vazio
+	@NotEmpty(message = "O campo NOME deve ser preenchido")
+	//Essa anotação de define o tamanho minímo e o tamanho máximo do campo
+	@Length(min = 3, max = 100, message = "O campo NOME deve ter entre 3 e 100 caracteres.")
 	private String nome;
+	@NotEmpty(message = "O campo DESCRIÇÃO deve ser preenchido")
+	@Length(min = 3, max = 200, message = "O campo DESCRIÇÃO deve ter entre 3 e 200 caracteres.")
 	private String descricao;
 
 	// Cardinaliade de 1 para n com o objeto categoria na classe Livro

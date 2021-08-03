@@ -4,8 +4,11 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,7 +23,8 @@ import com.bookstore.domain.Categoria;
 import com.bookstore.dto.CategoriaDTO;
 import com.bookstore.service.CategoriaService;
 
-
+//Essa anotação informa que o endpoint /categorias pode receber requisições de diversas fontes, de diversas portas Exemplo: A porta do angular 4200
+@CrossOrigin("*")
 //Essa é uma classe de controlador Rest que recebe requisições
 @RestController
 //Para acessar os endpoints preciso passar o /categorias no endereço e chamar o endpoint após
@@ -50,8 +54,9 @@ public class CategoriaResource {
 	}
 	
 	//Quando receber uma requisição do tipo post no /categorias, esse método vai ser chamado
+	//O @Valid valida a Categoria se ele atende as regras definidas no DOMAIN do objeto
 	@PostMapping
-	public ResponseEntity<Categoria> create(@RequestBody Categoria categoria){
+	public ResponseEntity<Categoria> create(@Valid @RequestBody Categoria categoria){
 		//Vamos salvar a categoria que veio no body e já preenchemos ele com o id
 		categoria = categoriaService.create(categoria);
 		//Por questões de boas práticas temos que passar para o usuário um caminho (URI) de acesso ao novo objeto
@@ -63,8 +68,9 @@ public class CategoriaResource {
 	}
 
 	//Recebemos uma CategoriaDTO, pois estamos atualizando apenas as categorias e não os livros
+	//O @Valid valida a Categoria se ele atende as regras definidas no DOMAIN do objeto
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<CategoriaDTO> update(@PathVariable Integer id, @RequestBody CategoriaDTO categoria){
+	public ResponseEntity<CategoriaDTO> update(@PathVariable Integer id, @Valid @RequestBody CategoriaDTO categoria){
 		Categoria novaCategoria = categoriaService.update(id, categoria);
 		return ResponseEntity.ok().body(new CategoriaDTO(novaCategoria));
 	}
